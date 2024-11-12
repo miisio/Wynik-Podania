@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wynik Podania do Służb</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: #333;
+        }
+        .form-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #4e54c8;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            text-align: left;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4e54c8;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #3b45a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Wynik Podania do Służb</h2>
+
+        <label for="nick">Nick z Discorda (adresat):</label>
+        <input type="text" id="nick" placeholder="Wprowadź nick osoby">
+
+        <label for="instytucja">Instytucja:</label>
+        <select id="instytucja">
+            <option value="Straż Graniczna">Straż Graniczna</option>
+            <option value="WZD">WZD</option>
+            <option value="Ratownictwo Medyczne">Ratownictwo Medyczne</option>
+        </select>
+
+        <label for="wynik">Wynik podania:</label>
+        <select id="wynik">
+            <option value="Pozytywny">Pozytywny</option>
+            <option value="Negatywny">Negatywny</option>
+        </select>
+
+        <button onclick="sendToDiscord()">Wyślij</button>
+    </div>
+
+    <script>
+        function sendToDiscord() {
+            const webhookUrl = "https://discord.com/api/webhooks/1303780615786725406/tG8i0ykMUyeCuDcCeBPGpTBmvceSZgeoEduUlz4uSAzMTHAITbbuUU1jS0WBDO6_TTs0";
+            const nick = document.getElementById("nick").value;
+            const instytucja = document.getElementById("instytucja").value;
+            const wynik = document.getElementById("wynik").value;
+
+            // Treść wiadomości w embed z kolorystyką zależną od wyniku
+            const embedContent = {
+                embeds: [{
+                    title: `Wynik Podania - ${instytucja}`,
+                    description: `**Nick adresata:** ${nick}\n**Wynik:** ${wynik}`,
+                    color: wynik === "Pozytywny" ? 3066993 : 15158332 // zielony dla pozytywnego, czerwony dla negatywnego
+                }]
+            };
+
+            // Wysyłanie embed na Discord za pomocą webhooka
+            fetch(webhookUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(embedContent)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Wynik został wysłany!");
+                } else {
+                    alert("Błąd podczas wysyłania.");
+                }
+            })
+            .catch(error => {
+                console.error("Błąd:", error);
+                alert("Błąd podczas wysyłania.");
+            });
+        }
+    </script>
+</body>
+</html>
