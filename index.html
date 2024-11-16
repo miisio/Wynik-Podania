@@ -15,7 +15,7 @@
             background: linear-gradient(to right, #4e54c8, #8f94fb);
             color: #333;
         }
-        .form-container {
+        .form-container, .login-container {
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -23,6 +23,10 @@
             width: 100%;
             padding: 20px;
             text-align: center;
+            display: none;
+        }
+        .active {
+            display: block;
         }
         .logo {
             width: 100px;
@@ -59,10 +63,20 @@
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <!-- Logo na górze -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo_Stra%C5%BCy_Granicznej_POL.svg" alt="Logo" class="logo">
-        
+    <!-- Kontener logowania -->
+    <div class="login-container active" id="loginContainer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Logo_Stra%C5%BCy_Granicznej_POL.svg/471px-Logo_Stra%C5%BCy_Granicznej_POL.png" alt="Logo" class="logo">
+        <h2>Logowanie</h2>
+        <label for="username">Login:</label>
+        <input type="text" id="username" placeholder="Wprowadź login">
+        <label for="password">Hasło:</label>
+        <input type="password" id="password" placeholder="Wprowadź hasło">
+        <button onclick="login()">Zaloguj</button>
+    </div>
+
+    <!-- Kontener formularza -->
+    <div class="form-container" id="formContainer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Logo_Stra%C5%BCy_Granicznej_POL.svg/471px-Logo_Stra%C5%BCy_Granicznej_POL..png" alt="Logo" class="logo">
         <h2>Wynik Podania do Służb</h2>
 
         <label for="nick">Nick z Discorda (adresat):</label>
@@ -75,6 +89,12 @@
             <option value="Ratownictwo Medyczne">Ratownictwo Medyczne</option>
         </select>
 
+        <label for="etap">Etap:</label>
+        <select id="etap">
+            <option value="Etap 1">Etap 1 (Dokument)</option>
+            <option value="Etap 2">Etap 2 (Test)</option>
+        </select>
+
         <label for="wynik">Wynik podania:</label>
         <select id="wynik">
             <option value="Pozytywny">Pozytywny</option>
@@ -85,17 +105,40 @@
     </div>
 
     <script>
+        // Dane do logowania
+        const users = {
+            "michal.nowacki": "haslo123",
+            "cezary.wieczorek": "haslo456",
+            "leonard.bielik": "haslo101"
+        };
+
+        // Funkcja logowania
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (users[username] && users[username] === password) {
+                document.getElementById("loginContainer").classList.remove("active");
+                document.getElementById("formContainer").classList.add("active");
+                alert(`Zalogowano jako ${username}`);
+            } else {
+                alert("Nieprawidłowy login lub hasło");
+            }
+        }
+
+        // Funkcja wysyłania danych na Discord
         function sendToDiscord() {
             const webhookUrl = "https://discord.com/api/webhooks/1303780615786725406/tG8i0ykMUyeCuDcCeBPGpTBmvceSZgeoEduUlz4uSAzMTHAITbbuUU1jS0WBDO6_TTs0";
             const nick = document.getElementById("nick").value;
             const instytucja = document.getElementById("instytucja").value;
+            const etap = document.getElementById("etap").value;
             const wynik = document.getElementById("wynik").value;
 
             // Treść wiadomości w embed z kolorystyką zależną od wyniku
             const embedContent = {
                 embeds: [{
                     title: `Wynik Podania - ${instytucja}`,
-                    description: `**Nick adresata:** ${nick}\n**Wynik:** ${wynik}`,
+                    description: `**Nick adresata:** ${nick}\n**Etap:** ${etap}\n**Wynik:** ${wynik}`,
                     color: wynik === "Pozytywny" ? 3066993 : 15158332 // zielony dla pozytywnego, czerwony dla negatywnego
                 }]
             };
