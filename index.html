@@ -99,6 +99,7 @@
         <select id="wynik">
             <option value="Pozytywny">Pozytywny</option>
             <option value="Negatywny">Negatywny</option>
+            <option value="Usunięto z rekrutacji">Usunięto z rekrutacji</option>
         </select>
 
         <button onclick="sendToDiscord()">Wyślij</button>
@@ -139,7 +140,7 @@
                 embeds: [{
                     title: `Wynik Podania - ${instytucja}`,
                     description: `**Nick adresata:** ${nick}\n**Etap:** ${etap}\n**Wynik:** ${wynik}`,
-                    color: wynik === "Pozytywny" ? 3066993 : 15158332 // zielony dla pozytywnego, czerwony dla negatywnego
+                    color: wynik === "Pozytywny" ? 3066993 : (wynik === "Negatywny" ? 15158332 : 10070709) // zielony, czerwony, szary
                 }]
             };
 
