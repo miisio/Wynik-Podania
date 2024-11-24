@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wynik Podania do Służb</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo_Stra%C5%BCy_Granicznej_POL.svg">
     <style>
         body {
             display: flex;
@@ -135,9 +137,9 @@
             const etap = document.getElementById("etap").value;
             const wynik = document.getElementById("wynik").value;
 
-            // Tworzenie opisu na podstawie wyniku
+            // Tworzenie opisu na podstawie warunków
             let description = `**Nick adresata:** ${nick}\n**Wynik:** ${wynik}`;
-            if (wynik !== "Usunięto z rekrutacji") {
+            if (instytucja !== "Ratownictwo Medyczne" && wynik !== "Usunięto z rekrutacji") {
                 description += `\n**Etap:** ${etap}`;
             }
 
